@@ -3,6 +3,11 @@
 
 ## Unreleased
 
+## v3.3.1-PRIVATE
+
+* jetify
+* update for compat with Picasso v2.71828
+
 ## v3.3.0
 
 * Bumped version number

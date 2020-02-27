@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-  compile('com.twitter.sdk.android:twitter:3.3.0@aar') {
+  compile('com.twitter.sdk.android:twitter:3.3.1-PRIVATE@aar') {
     transitive = true
   }
 }
