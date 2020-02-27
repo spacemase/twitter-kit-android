@@ -1,8 +1,7 @@
 ext {
-    compileSdkVersion = 26
-    buildToolsVersion = '26.0.2'
-    targetSdkVersion = 22
-    minSdkVersion = 14
+    compileSdkVersion = 28
+    targetSdkVersion = 26
+    minSdkVersion = 21
 
     sourceCompatibilityVersion = JavaVersion.VERSION_1_8
     targetCompatibilityVersion = JavaVersion.VERSION_1_8
@@ -13,7 +12,7 @@ ext {
     dependency = [
             // Gradle plugins
             spoonGradlePlugin          : 'com.stanfy.spoon:spoon-gradle-plugin:1.0.4',
-            androidGradlePlugin        : 'com.android.tools.build:gradle:3.0.0',
+            androidGradlePlugin        : 'com.android.tools.build:gradle:3.5.3',
 
             // Mopub
             mopub                      : 'com.mopub:mopub-sdk-native-static:4.11.0@aar',

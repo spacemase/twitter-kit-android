@@ -23,7 +23,6 @@ apply plugin: ArtifactSizePlugin
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
         versionCode 1
@@ -79,9 +78,9 @@ dependencies {
         api project(path: path)
     }
 
-    testCompile dependency.mockito
-    testCompile dependency.junit
-    testCompile(dependency.robolectric) {
+    testImplementation dependency.mockito
+    testImplementation dependency.junit
+    testImplementation(dependency.robolectric) {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
