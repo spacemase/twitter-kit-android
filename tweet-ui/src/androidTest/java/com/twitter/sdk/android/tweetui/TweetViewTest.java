@@ -21,6 +21,10 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import com.twitter.sdk.android.core.models.Tweet;
+import com.twitter.sdk.android.tweetui.testutils.TestFixtures;
+
+import static org.junit.Assert.assertEquals;
+
 
 public class TweetViewTest extends BaseTweetViewTest {
     @Override

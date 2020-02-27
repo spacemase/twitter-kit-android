@@ -15,7 +15,10 @@
  *
  */
 
-package com.twitter.sdk.android.tweetui;
+package com.twitter.sdk.android.tweetui.testutils;
+
+import com.twitter.sdk.android.tweetui.TweetUi;
+
 
 public class TweetUiTestUtils {
     public static void resetTweetUi() {

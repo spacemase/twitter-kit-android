@@ -27,14 +27,17 @@ import com.twitter.sdk.android.core.models.ImageValue;
 import com.twitter.sdk.android.core.models.MediaEntity;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.tweetui.internal.AspectRatioFrameLayout;
+import com.twitter.sdk.android.tweetui.testutils.TestFixtures;
+import com.twitter.sdk.android.tweetui.testutils.TestUtils;
+
+import org.junit.Assert;
+import org.mockito.Mockito;
 
 import java.util.Locale;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 public abstract class AbstractTweetViewTest extends TweetUiTestCase {
+    private static final double EPSILON = 0.01f;
+
     Context context;
     Resources resources;
     Locale defaultLocale;
@@ -71,10 +74,9 @@ public abstract class AbstractTweetViewTest extends TweetUiTestCase {
             AbstractTweetView.DependencyProvider dependencyProvider);
 
     private void setUpMockDependencyProvider() {
-        mockDependencyProvider = mock(TestDependencyProvider.class);
-        when(mockDependencyProvider.getImageLoader())
-                .thenReturn(TweetUi.getInstance().getImageLoader());
-        when(mockDependencyProvider.getTweetUi()).thenReturn(TweetUi.getInstance());
+        mockDependencyProvider = Mockito.mock(TestDependencyProvider.class);
+        Mockito.when(mockDependencyProvider.getImageLoader()).thenReturn(TweetUi.getInstance().getImageLoader());
+        Mockito.when(mockDependencyProvider.getTweetUi()).thenReturn(TweetUi.getInstance());
     }
 
     // initialization
@@ -82,40 +84,40 @@ public abstract class AbstractTweetViewTest extends TweetUiTestCase {
     public void testInit() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET);
         final long tweetId = TestFixtures.TEST_TWEET.id;
-        assertEquals(tweetId, view.getTweetId());
-        assertEquals(TestFixtures.TEST_NAME, view.fullNameView.getText().toString());
-        assertEquals(TestFixtures.TEST_FORMATTED_SCREEN_NAME, view.screenNameView.getText());
-        assertEquals(TestFixtures.TEST_STATUS, view.contentView.getText().toString());
+        Assert.assertEquals(tweetId, view.getTweetId());
+        Assert.assertEquals(TestFixtures.TEST_NAME, view.fullNameView.getText().toString());
+        Assert.assertEquals(TestFixtures.TEST_FORMATTED_SCREEN_NAME, view.screenNameView.getText());
+        Assert.assertEquals(TestFixtures.TEST_STATUS, view.contentView.getText().toString());
     }
 
     public void testInit_withEmptyTweet() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET);
         // recycle so we're not relying on first time defaults, fields should clear
         view.setTweet(TestFixtures.EMPTY_TWEET);
-        assertEquals(TestFixtures.EMPTY_TWEET.id, view.getTweetId());
-        assertEquals(TestFixtures.EMPTY_STRING, view.fullNameView.getText().toString());
-        assertEquals(TestFixtures.EMPTY_STRING, view.screenNameView.getText().toString());
-        assertEquals(TestFixtures.EMPTY_STRING, view.contentView.getText().toString());
+        Assert.assertEquals(TestFixtures.EMPTY_TWEET.id, view.getTweetId());
+        Assert.assertEquals(TestFixtures.EMPTY_STRING, view.fullNameView.getText().toString());
+        Assert.assertEquals(TestFixtures.EMPTY_STRING, view.screenNameView.getText().toString());
+        Assert.assertEquals(TestFixtures.EMPTY_STRING, view.contentView.getText().toString());
     }
 
     public void testInit_withNullTweet() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET);
         // recycle so we're not relying on first time defaults, fields should clear
         view.setTweet(null);
-        assertEquals(TestFixtures.EMPTY_TWEET.id, view.getTweetId());
-        assertEquals(TestFixtures.EMPTY_STRING, view.fullNameView.getText().toString());
-        assertEquals(TestFixtures.EMPTY_STRING, view.screenNameView.getText().toString());
-        assertEquals(TestFixtures.EMPTY_STRING, view.contentView.getText().toString());
+        Assert.assertEquals(TestFixtures.EMPTY_TWEET.id, view.getTweetId());
+        Assert.assertEquals(TestFixtures.EMPTY_STRING, view.fullNameView.getText().toString());
+        Assert.assertEquals(TestFixtures.EMPTY_STRING, view.screenNameView.getText().toString());
+        Assert.assertEquals(TestFixtures.EMPTY_STRING, view.contentView.getText().toString());
     }
 
     public void testInit_inEditMode() {
         TwitterTestUtils.resetTwitter();
         try {
             final AbstractTweetView view = createViewInEditMode(context, TestFixtures.TEST_TWEET);
-            assertTrue(view.isInEditMode());
-            assertTrue(view.isEnabled());
+            Assert.assertTrue(view.isInEditMode());
+            Assert.assertTrue(view.isEnabled());
         } catch (Exception e) {
-            fail("Must start TweetUi... IllegalStateException should be caught");
+            Assert.fail("Must start TweetUi... IllegalStateException should be caught");
         } finally {
             TwitterTestUtils.resetTwitter();
         }
@@ -123,18 +125,18 @@ public abstract class AbstractTweetViewTest extends TweetUiTestCase {
 
     public void testIsTweetUiEnabled_withEditMode() {
         final AbstractTweetView view = createView(getContext(), TestFixtures.TEST_TWEET);
-        assertTrue(view.isTweetUiEnabled());
+        Assert.assertTrue(view.isTweetUiEnabled());
     }
 
     public void testIsTweetUiEnabled_inEditMode() {
         final AbstractTweetView view = createViewInEditMode(getContext(), TestFixtures.TEST_TWEET);
-        assertFalse(view.isTweetUiEnabled());
+        Assert.assertFalse(view.isTweetUiEnabled());
     }
 
     public void testIsTweetUiEnabled_tweetUiStarted() {
         final AbstractTweetView view = new TweetView(getContext(), TestFixtures.TEST_TWEET);
-        assertTrue(view.isTweetUiEnabled());
-        assertTrue(view.isEnabled());
+        Assert.assertTrue(view.isTweetUiEnabled());
+        Assert.assertTrue(view.isEnabled());
     }
 
     // Tests Date formatting reliant string, manually sets english and restores original locale
@@ -142,8 +144,7 @@ public abstract class AbstractTweetViewTest extends TweetUiTestCase {
         final Locale originalLocale = TestUtils.setLocale(getContext(), Locale.ENGLISH);
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET);
         view.setTweet(TestFixtures.EMPTY_TWEET);
-        assertEquals(getResources().getString(R.string.tw__loading_tweet),
-                view.getContentDescription());
+        Assert.assertEquals(getResources().getString(R.string.tw__loading_tweet), view.getContentDescription());
         TestUtils.setLocale(getContext(), originalLocale);
     }
 
@@ -152,88 +153,85 @@ public abstract class AbstractTweetViewTest extends TweetUiTestCase {
         final Locale originalLocale = TestUtils.setLocale(getContext(), Locale.ENGLISH);
 
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET);
-        assertTrue(TweetUtils.isTweetResolvable(view.tweet));
-        assertEquals(TestFixtures.TEST_CONTENT_DESCRIPTION, view.getContentDescription());
+        Assert.assertTrue(TweetUtils.isTweetResolvable(view.tweet));
+        Assert.assertEquals(TestFixtures.TEST_CONTENT_DESCRIPTION, view.getContentDescription());
 
         TestUtils.setLocale(getContext(), originalLocale);
     }
 
     public void testSetTweetMediaClickListener() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET_LINK);
-        view.setTweetMediaClickListener((tweet, entity) -> {
+        view.setTweetMediaClickListener((tweet, entity) -> { });
 
-        });
-
-        assertNotNull(view.tweetMediaClickListener);
+        Assert.assertNotNull(view.tweetMediaClickListener);
     }
 
     public void testSetTweetLinkClickListener() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET_LINK);
-        final TweetLinkClickListener linkClickListener = mock(TweetLinkClickListener.class);
+        final TweetLinkClickListener linkClickListener = Mockito.mock(TweetLinkClickListener.class);
         view.setTweetLinkClickListener(linkClickListener);
 
-        assertNotNull(view.tweetLinkClickListener);
+        Assert.assertNotNull(view.tweetLinkClickListener);
 
         view.getLinkClickListener().onUrlClicked(TestFixtures.TEST_URL);
-        verify(linkClickListener).onLinkClick(TestFixtures.TEST_TWEET_LINK, TestFixtures.TEST_URL);
+        Mockito.verify(linkClickListener).onLinkClick(TestFixtures.TEST_TWEET_LINK, TestFixtures.TEST_URL);
     }
 
     public void testSetHashtagLinkClickListener() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET_HASHTAG);
-        final TweetLinkClickListener linkClickListener = mock(TweetLinkClickListener.class);
+        final TweetLinkClickListener linkClickListener = Mockito.mock(TweetLinkClickListener.class);
         view.setTweetLinkClickListener(linkClickListener);
 
-        assertNotNull(view.tweetLinkClickListener);
+        Assert.assertNotNull(view.tweetLinkClickListener);
 
         view.getLinkClickListener().onUrlClicked(TestFixtures.TEST_HASHTAG);
-        verify(linkClickListener).onLinkClick(TestFixtures.TEST_TWEET_HASHTAG,
-                TestFixtures.TEST_HASHTAG);
+        Mockito.verify(linkClickListener).onLinkClick(TestFixtures.TEST_TWEET_HASHTAG, TestFixtures.TEST_HASHTAG);
     }
 
     public void testSetTweet_defaultClickListener() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET_LINK);
 
-        assertNull(view.tweetLinkClickListener);
+        Assert.assertNull(view.tweetLinkClickListener);
     }
 
     // Permalink click
     public void testSetTweet_permalink() {
         final AbstractTweetView view = createView(context, null);
         view.setTweet(TestFixtures.TEST_TWEET);
-        assertEquals(TestFixtures.TEST_PERMALINK_ONE, view.getPermalinkUri().toString());
+        Assert.assertEquals(TestFixtures.TEST_PERMALINK_ONE, view.getPermalinkUri().toString());
     }
 
     // permalinkUri should be null so the permalink launcher will be a NoOp
     public void testSetTweet_nullTweetPermalink() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET);
         view.setTweet(null);
-        assertNull(view.getPermalinkUri());
+        Assert.assertNull(view.getPermalinkUri());
     }
 
     public void testSetTweet_updatePermalink() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET);
-        assertEquals(TestFixtures.TEST_PERMALINK_ONE, view.getPermalinkUri().toString());
+        Assert.assertEquals(TestFixtures.TEST_PERMALINK_ONE, view.getPermalinkUri().toString());
         view.setTweet(TestFixtures.TEST_PHOTO_TWEET);
-        assertEquals(TestFixtures.TEST_PERMALINK_TWO, view.getPermalinkUri().toString());
+        Assert.assertEquals(TestFixtures.TEST_PERMALINK_TWO, view.getPermalinkUri().toString());
     }
 
     public void testGetAspectRatio_withNullMediaEntity() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET);
         final MediaEntity mediaEntity = null;
-        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity));
+        Assert.assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity), EPSILON);
     }
 
     public void testGetAspectRatio_withNullImageValue() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET);
         final ImageValue imageValue = null;
-        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(imageValue));
+        Assert.assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(imageValue), EPSILON);
     }
 
     public void testGetAspectRatio_mediaEntityWithNullSizes() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET);
         final MediaEntity mediaEntity = TestFixtures.createMediaEntityWithPhoto(null);
 
-        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity));
+        Assert.assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity), EPSILON);
     }
 
     public void testGetAspectRatio_mediaEntityWithEmptySizes() {
@@ -241,30 +239,33 @@ public abstract class AbstractTweetViewTest extends TweetUiTestCase {
         final MediaEntity.Sizes sizes = new MediaEntity.Sizes(null, null, null, null);
         final MediaEntity mediaEntity = TestFixtures.createMediaEntityWithPhoto(sizes);
 
-        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity));
+        Assert.assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity), EPSILON);
     }
 
     public void testGetAspectRatio_mediaEntityWithZeroDimension() {
         final AbstractTweetView view = createView(context, TestFixtures.TEST_TWEET);
 
-        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO,
-                view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(0, 0)));
-        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO,
-                view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(100, 0)));
-        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO,
-                view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(0, 100)));
+        Assert.assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO,
+                            view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(0, 0)),
+                            EPSILON);
+        Assert.assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO,
+                            view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(100, 0)),
+                            EPSILON);
+        Assert.assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO,
+                            view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(0, 100)),
+                            EPSILON);
     }
 
     public void testSetTweetMedia_handlesNullPicasso() {
-        when(mockDependencyProvider.getImageLoader()).thenReturn(null);
+        Mockito.when(mockDependencyProvider.getImageLoader()).thenReturn(null);
 
-        final AbstractTweetView tweetView = createViewWithMocks(context, TestFixtures.TEST_TWEET,
-                mockDependencyProvider);
+        final AbstractTweetView tweetView =
+                createViewWithMocks(context, TestFixtures.TEST_TWEET, mockDependencyProvider);
 
         try {
-            tweetView.setTweetMedia(mock(Tweet.class));
+            tweetView.setTweetMedia(Mockito.mock(Tweet.class));
         } catch (NullPointerException e) {
-            fail("Should have handled null error image");
+            Assert.fail("Should have handled null error image");
         }
     }
 
@@ -272,18 +273,18 @@ public abstract class AbstractTweetViewTest extends TweetUiTestCase {
         final AbstractTweetView tweetView = createViewWithMocks(context, null);
         tweetView.setTweet(TestFixtures.TEST_PHOTO_TWEET);
 
-        assertEquals(View.VISIBLE, tweetView.mediaContainer.getVisibility());
-        assertEquals(View.VISIBLE, tweetView.tweetMediaView.getVisibility());
-        assertEquals(View.GONE, tweetView.mediaBadgeView.getVisibility());
+        Assert.assertEquals(View.VISIBLE, tweetView.mediaContainer.getVisibility());
+        Assert.assertEquals(View.VISIBLE, tweetView.tweetMediaView.getVisibility());
+        Assert.assertEquals(View.GONE, tweetView.mediaBadgeView.getVisibility());
     }
 
     public void testRender_forMultiplePhotoEntities() {
         final AbstractTweetView tweetView = createViewWithMocks(context, null);
         tweetView.setTweet(TestFixtures.TEST_MULTIPLE_PHOTO_TWEET);
 
-        assertEquals(View.VISIBLE, tweetView.mediaContainer.getVisibility());
-        assertEquals(View.VISIBLE, tweetView.tweetMediaView.getVisibility());
-        assertEquals(View.GONE, tweetView.mediaBadgeView.getVisibility());
+        Assert.assertEquals(View.VISIBLE, tweetView.mediaContainer.getVisibility());
+        Assert.assertEquals(View.VISIBLE, tweetView.tweetMediaView.getVisibility());
+        Assert.assertEquals(View.GONE, tweetView.mediaBadgeView.getVisibility());
     }
 
     public void testRender_rendersVineCard() {
@@ -295,21 +296,21 @@ public abstract class AbstractTweetViewTest extends TweetUiTestCase {
 
         view.setTweet(tweetWithVineCard);
 
-        assertEquals(TestFixtures.TEST_NAME, view.fullNameView.getText().toString());
-        assertEquals(TestFixtures.TEST_FORMATTED_SCREEN_NAME, view.screenNameView.getText());
-        assertEquals(TestFixtures.TEST_STATUS, view.contentView.getText().toString());
-        assertEquals(View.VISIBLE, view.mediaContainer.getVisibility());
-        assertEquals(View.VISIBLE, view.mediaBadgeView.getVisibility());
-        assertEquals(View.VISIBLE, view.tweetMediaView.getVisibility());
+        Assert.assertEquals(TestFixtures.TEST_NAME, view.fullNameView.getText().toString());
+        Assert.assertEquals(TestFixtures.TEST_FORMATTED_SCREEN_NAME, view.screenNameView.getText());
+        Assert.assertEquals(TestFixtures.TEST_STATUS, view.contentView.getText().toString());
+        Assert.assertEquals(View.VISIBLE, view.mediaContainer.getVisibility());
+        Assert.assertEquals(View.VISIBLE, view.mediaBadgeView.getVisibility());
+        Assert.assertEquals(View.VISIBLE, view.tweetMediaView.getVisibility());
     }
 
     public void testClearMedia() {
         final AbstractTweetView view = createViewWithMocks(context, null);
-        view.mediaContainer = mock(AspectRatioFrameLayout.class);
+        view.mediaContainer = Mockito.mock(AspectRatioFrameLayout.class);
 
         view.clearTweetMedia();
 
-        verify(view.mediaContainer).setVisibility(View.GONE);
+        Mockito.verify(view.mediaContainer).setVisibility(View.GONE);
     }
 }
 

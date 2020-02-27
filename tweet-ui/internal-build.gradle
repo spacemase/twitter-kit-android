@@ -1,6 +1,3 @@
-import io.fabric.gradle.weaving.ArtifactSizePlugin
-import io.fabric.gradle.weaving.DexMethodCountPlugin
-
 /*
  * Copyright (C) 2015 Twitter, Inc.
  *
@@ -20,8 +17,6 @@ import io.fabric.gradle.weaving.DexMethodCountPlugin
 
 apply plugin: 'com.android.library'
 apply from: rootProject.qualityScript
-apply plugin: ArtifactSizePlugin
-apply plugin: DexMethodCountPlugin
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -70,11 +65,11 @@ android {
         targetCompatibility rootProject.targetCompatibilityVersion
     }
 
-    // Forcibly add debug and the generated "R" files onto the test classpath
+    /*// Forcibly add debug and the generated "R" files onto the test classpath
     sourceSets {
         test.java.srcDirs += "build/generated/source/r/debug"
         test.java.srcDirs += "src/debug"
-    }
+    }*/
 
     testOptions {
         unitTests.returnDefaultValues = true

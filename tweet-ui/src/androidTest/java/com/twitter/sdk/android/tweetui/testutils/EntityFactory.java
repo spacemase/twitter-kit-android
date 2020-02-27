@@ -15,7 +15,7 @@
  *
  */
 
-package com.twitter.sdk.android.tweetui;
+package com.twitter.sdk.android.tweetui.testutils;
 
 import com.twitter.sdk.android.core.models.HashtagEntity;
 import com.twitter.sdk.android.core.models.MentionEntity;

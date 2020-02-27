@@ -17,23 +17,17 @@
 
 package com.twitter.sdk.android.tweetui;
 
-import android.content.Context;
+import com.squareup.picasso.Picasso;
 
-import com.twitter.sdk.android.core.models.Tweet;
 
-public class TestTweetActionBarView extends TweetActionBarView {
-
-    public TestTweetActionBarView(Context context) {
-        super(context);
+public class TestDependencyProvider extends BaseTweetView.DependencyProvider {
+    @Override
+    public TweetUi getTweetUi() {
+        return super.getTweetUi();
     }
 
     @Override
-    public void setTweet(Tweet tweet) {
-        super.setTweet(tweet);
-    }
-
-    @Override
-    public void setLike(Tweet tweet) {
-        super.setLike(tweet);
+    public Picasso getImageLoader() {
+        return super.getImageLoader();
     }
 }

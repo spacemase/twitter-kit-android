@@ -15,7 +15,7 @@
  *
  */
 
-package com.twitter.sdk.android.tweetui;
+package com.twitter.sdk.android.tweetui.testutils;
 
 import android.net.Uri;
 

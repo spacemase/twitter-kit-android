@@ -15,11 +15,13 @@
  *
  */
 
-package com.twitter.sdk.android.tweetui;
+package com.twitter.sdk.android.tweetui.testutils;
 
 import android.content.res.Resources;
 
-import junit.framework.Assert;
+import com.twitter.sdk.android.tweetui.BaseTweetView;
+
+import org.junit.Assert;
 
 /**
  * Common shared utilities for testing.

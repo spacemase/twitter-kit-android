@@ -22,7 +22,9 @@ import android.content.Context;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.twitter.sdk.android.core.models.Tweet;
+import com.twitter.sdk.android.tweetui.testutils.TestFixtures;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

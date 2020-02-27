@@ -22,7 +22,6 @@ subprojects { Project subproject ->
         repositories {
             jcenter()
             google()
-            maven { url 'https://maven.fabric.io/public' }
         }
         dependencies {
             classpath dependency.androidGradlePlugin

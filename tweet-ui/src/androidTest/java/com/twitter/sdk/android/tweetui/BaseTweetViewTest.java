@@ -31,6 +31,9 @@ import com.twitter.sdk.android.core.models.MediaEntity;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.tweetui.internal.AspectRatioFrameLayout;
 import com.twitter.sdk.android.tweetui.internal.TweetMediaView;
+import com.twitter.sdk.android.tweetui.testutils.TestFixtures;
+import com.twitter.sdk.android.tweetui.testutils.TestUtils;
+import com.twitter.sdk.android.tweetui.testutils.TweetAsserts;
 
 import org.mockito.ArgumentCaptor;
 
@@ -38,6 +41,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -49,7 +58,7 @@ import static org.mockito.Mockito.when;
  */
 public abstract class BaseTweetViewTest extends TweetUiTestCase {
     private static final String REQUIRED_RETWEETED_BY_TEXT = "Retweeted by Mr Retweets";
-    protected static final double DELTA = 0.001f;
+    private static final float EPSILON = 0.01f;
     protected static final String ALT_TEXT = "ALT_TEXT";
 
     protected Context context;
@@ -397,20 +406,20 @@ public abstract class BaseTweetViewTest extends TweetUiTestCase {
     public void testGetAspectRatio_withNullMediaEntity() {
         final BaseTweetView view = createView(context, TestFixtures.TEST_TWEET);
         final MediaEntity mediaEntity = null;
-        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity));
+        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity), EPSILON);
     }
 
     public void testGetAspectRatio_withNullImageValue() {
         final BaseTweetView view = createView(context, TestFixtures.TEST_TWEET);
         final ImageValue imageValue = null;
-        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(imageValue));
+        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(imageValue), EPSILON);
     }
 
     public void testGetAspectRatio_mediaEntityWithNullSizes() {
         final BaseTweetView view = createView(context, TestFixtures.TEST_TWEET);
         final MediaEntity mediaEntity = TestFixtures.createMediaEntityWithPhoto(null);
 
-        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity));
+        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity), EPSILON);
     }
 
     public void testGetAspectRatio_mediaEntityWithEmptySizes() {
@@ -418,18 +427,21 @@ public abstract class BaseTweetViewTest extends TweetUiTestCase {
         final MediaEntity.Sizes sizes = new MediaEntity.Sizes(null, null, null, null);
         final MediaEntity mediaEntity = TestFixtures.createMediaEntityWithPhoto(sizes);
 
-        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity));
+        assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO, view.getAspectRatio(mediaEntity), EPSILON);
     }
 
     public void testGetAspectRatio_mediaEntityWithZeroDimension() {
         final BaseTweetView view = createView(context, TestFixtures.TEST_TWEET);
 
         assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO,
-                view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(0, 0)));
+                     view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(0, 0)),
+                     EPSILON);
         assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO,
-                view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(100, 0)));
+                     view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(100, 0)),
+                     EPSILON);
         assertEquals(BaseTweetView.DEFAULT_ASPECT_RATIO,
-                view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(0, 100)));
+                     view.getAspectRatio(TestFixtures.createMediaEntityWithPhoto(0, 100)),
+                     EPSILON);
     }
 
     public void testSetProfilePhotoView_handlesNullPicasso() {

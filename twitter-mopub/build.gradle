@@ -53,11 +53,11 @@ android {
         targetCompatibility rootProject.targetCompatibilityVersion
     }
 
-    // Forcibly add debug and the generated "R" files onto the test classpath
+    /*// Forcibly add debug and the generated "R" files onto the test classpath
     sourceSets {
         test.java.srcDirs += "build/generated/source/r/debug"
         test.java.srcDirs += "src/debug"
-    }
+    }*/
 
     testOptions {
         unitTests.returnDefaultValues = true
